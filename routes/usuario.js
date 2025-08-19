@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
-const { verificarToken } = require('../middleware/auth');
+const { verificarToken } = require('../seguridad/auth');
 
 // Rutas públicas
 router.post('/registro', authController.registrar);

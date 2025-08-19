@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const vehiculoController = require('../controllers/vehiculoController');
-const { verificarToken } = require('../middleware/auth');
+const { verificarToken } = require('../seguridad/auth');
 
 // Todas las rutas de vehículos requieren autenticación
 router.use(verificarToken);
