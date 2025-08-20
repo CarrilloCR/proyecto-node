@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 
-const authRoutes = require('./models/usuarios');
-const vehiculoRoutes = require('./models/vehiculos');
+// Importar rutas correctas
+const authRoutes = require('./routes/usuario');
+const vehiculoRoutes = require('./routes/vehiculo');
 
 const app = express();
 
@@ -11,6 +13,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Servir archivos estáticos desde la carpeta public
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Conexión a MongoDB
 mongoose.connect('mongodb://localhost:27017/registro_vehiculos', {
@@ -26,12 +31,17 @@ mongoose.connection.on('error', (err) => {
   console.error('Error de conexión a MongoDB:', err);
 });
 
-// Rutas
+// Rutas API
 app.use('/api/auth', authRoutes);
 app.use('/api/vehiculos', vehiculoRoutes);
 
-// Ruta de prueba
+// Ruta principal - servir login.html
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Ruta de prueba
+app.get('/api/test', (req, res) => {
   res.json({ message: 'API de Registro de Vehículos funcionando correctamente' });
 });
 

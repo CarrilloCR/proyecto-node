@@ -1,5 +1,5 @@
-const Vehiculo = require('../models/Vehiculo');
-const Usuario = require('../models/Usuario');
+const Vehiculo = require('../models/vehiculos');
+const Usuario = require('../models/usuarios');
 
 const vehiculoController = {
   // CREATE - Crear un nuevo vehículo

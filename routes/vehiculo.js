@@ -1,7 +1,6 @@
-// routes/vehiculos.js
 const express = require('express');
 const router = express.Router();
-const vehiculoController = require('../controllers/vehiculoController');
+const vehiculoController = require('../controllers/vehiculosController');
 const { verificarToken } = require('../seguridad/auth');
 
 // Todas las rutas de vehículos requieren autenticación
