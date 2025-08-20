@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Registro de Vehículos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="dashboard.html" class="flex items-center text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        <span>Volver al Dashboard</span>
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <span id="userName" class="text-sm text-gray-700"></span>
+                    <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Mi Perfil</h1>
+            <p class="mt-2 text-gray-600">Gestiona tu información personal</p>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <!-- Profile Header -->
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-8">
+                <div class="flex items-center">
+                    <div class="h-20 w-20 bg-white rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-indigo-600 text-3xl"></i>
+                    </div>
+                    <div class="ml-6">
+                        <h2 id="profileName" class="text-2xl font-bold text-white"></h2>
+                        <p id="profileEmail" class="text-indigo-100"></p>
+                        <p id="profileMemberSince" class="text-indigo-200 text-sm mt-1"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Information -->
+            <div class="px-6 py-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">
+                            <i class="fas fa-info-circle text-gray-400 mr-2"></i>
+                            Información Personal
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Nombre Completo</label>
+                                <p id="infoNombre" class="text-lg font-semibold text-gray-900"></p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Correo Electrónico</label>
+                                <p id="infoEmail" class="text-lg font-semibold text-gray-900"></p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Teléfono</label>
+                                <p id="infoTelefono" class="text-lg font-semibold text-gray-900"></p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Dirección</label>
+                                <p id="infoDireccion" class="text-lg font-semibold text-gray-900"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Form (Initially Hidden) -->
+                    <div id="editForm" class="hidden">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">
+                            <i class="fas fa-edit text-gray-400 mr-2"></i>
+                            Editar Información
+                        </h3>
+                        
+                        <form id="profileForm" class="space-y-4">
+                            <div>
+                                <label for="nombre" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Nombre Completo *
+                                </label>
+                                <input type="text" id="nombre" name="nombre" required 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+
+                            <div>
+                                <label for="telefono" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Teléfono
+                                </label>
+                                <input type="tel" id="telefono" name="telefono" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+
+                            <div>
+                                <label for="direccion" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Dirección
+                                </label>
+                                <textarea id="direccion" name="direccion" rows="3"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                            </div>
+
+                            <div class="flex space-x-3 pt-4">
+                                <button type="submit" id="saveBtn"
+                                        class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200">
+                                    <span id="saveText">Guardar Cambios</span>
+                                    <div id="saveSpinner" class="hidden ml-2 inline-block">
+                                        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                    </div>
+                                </button>
+                                <button type="button" id="cancelEditBtn"
+                                        class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg transition duration-200">
+                                    Cancelar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Stats Section -->
+                    <div id="statsSection">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">
+                            <i class="fas fa-chart-bar text-gray-400 mr-2"></i>
+                            Mis Estadísticas
+                        </h3>
+                        
+                        <div id="userStats" class="space-y-4">
+                            <!-- Stats will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <div class="flex justify-between">
+                        <button id="editBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg transition duration-200">
+                            <i class="fas fa-edit mr-2"></i>Editar Perfil
+                        </button>
+                        
+                        <button id="changePasswordBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-200">
+                            <i class="fas fa-key mr-2"></i>Cambiar Contraseña
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="passwordModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-key text-blue-500 text-2xl mr-3"></i>
+                <h3 class="text-lg font-medium text-gray-900">Cambiar Contraseña</h3>
+            </div>
+            
+            <form id="passwordForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Contraseña Actual
+                    </label>
+                    <input type="password" id="currentPassword" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Nueva Contraseña
+                    </label>
+                    <input type="password" id="newPassword" required minlength="6"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Confirmar Nueva Contraseña
+                    </label>
+                    <input type="password" id="confirmNewPassword" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" id="cancelPasswordBtn" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition duration-200">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="confirmPasswordBtn" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition duration-200">
+                        Cambiar Contraseña
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Alert -->
+    <div id="alert" class="hidden fixed top-4 right-4 max-w-sm w-full bg-red-500 text-white p-4 rounded-lg shadow-lg z-50">
+        <div class="flex items-center">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <span id="alertText"></span>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg">
+            <div class="flex items-center space-x-3">
+                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
+                <span>Cargando...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const usuario = localStorage.getItem('usuario');
+            
+            if (!token || !usuario) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(usuario);
+            document.getElementById('userName').textContent = `Hola, ${currentUser.nombre}`;
+        }
+
+        // Show alert
+        function showAlert(message, type = 'error') {
+            const alert = document.getElementById('alert');
+            const alertText = document.getElementById('alertText');
+            
+            alertText.textContent = message;
+            alert.className = `fixed top-4 right-4 max-w-sm w-full p-4 rounded-lg shadow-lg z-50 ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            } text-white`;
+            alert.classList.remove('hidden');
+            
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Show/hide loading
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        // API call helper
+        async function apiCall(url, options = {}) {
+            const token = localStorage.getItem('token');
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+            
+            return fetch(url, { ...defaultOptions, ...options });
+        }
+
+        // Load user profile
+        async function loadProfile() {
+            showLoading();
+            try {
+                const response = await apiCall('/api/auth/perfil');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayProfile(data.usuario);
+                } else {
+                    showAlert(data.error || 'Error al cargar perfil');
+                }
+            } catch (error) {
+                showAlert('Error de conexión');
+                console.error('Error:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Load user statistics
+        async function loadStats() {
+            try {
+                const response = await apiCall('/api/vehiculos/estadisticas');
+                const stats = await response.json();
+                
+                if (response.ok) {
+                    displayStats(stats);
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Display profile information
+        function displayProfile(usuario) {
+            // Header
+            document.getElementById('profileName').textContent = usuario.nombre;
+            document.getElementById('profileEmail').textContent = usuario.email;
+            document.getElementById('profileMemberSince').textContent = 
+                `Miembro desde ${new Date(usuario.fechaRegistro).toLocaleDateString('es-ES')}`;
+
+            // Info cards
+            document.getElementById('infoNombre').textContent = usuario.nombre;
+            document.getElementById('infoEmail').textContent = usuario.email;
+            document.getElementById('infoTelefono').textContent = usuario.telefono || 'No especificado';
+            document.getElementById('infoDireccion').textContent = usuario.direccion || 'No especificada';
+
+            // Form fields
+            document.getElementById('nombre').value = usuario.nombre;
+            document.getElementById('telefono').value = usuario.telefono || '';
+            document.getElementById('direccion').value = usuario.direccion || '';
+        }
+
+        // Display statistics
+        function displayStats(stats) {
+            const statsContainer = document.getElementById('userStats');
+            statsContainer.innerHTML = `
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-blue-100 rounded-full">
+                            <i class="fas fa-car text-blue-600"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-gray-600">Total Vehículos</p>
+                            <p class="text-xl font-semibold text-gray-900">${stats.total || 0}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-green-100 rounded-full">
+                            <i class="fas fa-check-circle text-green-600"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-gray-600">Vehículos Activos</p>
+                            <p class="text-xl font-semibold text-gray-900">${stats.porEstado?.activo || 0}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-yellow-100 rounded-full">
+                            <i class="fas fa-calendar text-yellow-600"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-gray-600">Año Promedio</p>
+                            <p class="text-xl font-semibold text-gray-900">${stats.añoPromedio || 0}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-purple-100 rounded-full">
+                            <i class="fas fa-road text-purple-600"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-gray-600">KM Promedio</p>
+                            <p class="text-xl font-semibold text-gray-900">${Math.round(stats.kilometrajePromedio || 0).toLocaleString()}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Toggle edit mode
+        function toggleEditMode(show) {
+            const editForm = document.getElementById('editForm');
+            const statsSection = document.getElementById('statsSection');
+            const editBtn = document.getElementById('editBtn');
+            
+            if (show) {
+                editForm.classList.remove('hidden');
+                statsSection.classList.add('hidden');
+                editBtn.textContent = 'Cancelar Edición';
+                editBtn.className = 'bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition duration-200';
+            } else {
+                editForm.classList.add('hidden');
+                statsSection.classList.remove('hidden');
+                editBtn.innerHTML = '<i class="fas fa-edit mr-2"></i>Editar Perfil';
+                editBtn.className = 'bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg transition duration-200';
+            }
+        }
+
+        // Update profile
+        async function updateProfile(data) {
+            const saveBtn = document.getElementById('saveBtn');
+            const saveText = document.getElementById('saveText');
+            const saveSpinner = document.getElementById('saveSpinner');
+            
+            saveBtn.disabled = true;
+            saveText.textContent = 'Guardando...';
+            saveSpinner.classList.remove('hidden');
+            
+            try {
+                const response = await apiCall('/api/auth/perfil', {
+                    method: 'PUT',
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showAlert('Perfil actualizado correctamente', 'success');
+                    displayProfile(result.usuario);
+                    toggleEditMode(false);
+                    
+                    // Update localStorage
+                    const updatedUser = JSON.parse(localStorage.getItem('usuario'));
+                    updatedUser.nombre = result.usuario.nombre;
+                    updatedUser.telefono = result.usuario.telefono;
+                    updatedUser.direccion = result.usuario.direccion;
+                    localStorage.setItem('usuario', JSON.stringify(updatedUser));
+                    
+                    document.getElementById('userName').textContent = `Hola, ${result.usuario.nombre}`;
+                } else {
+                    showAlert(result.error || 'Error al actualizar perfil');
+                }
+            } catch (error) {
+                showAlert('Error de conexión');
+                console.error('Error:', error);
+            } finally {
+                saveBtn.disabled = false;
+                saveText.textContent = 'Guardar Cambios';
+                saveSpinner.classList.add('hidden');
+            }
+        }
+
+        // Event listeners
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+
+        document.getElementById('editBtn').addEventListener('click', () => {
+            const editForm = document.getElementById('editForm');
+            const isHidden = editForm.classList.contains('hidden');
+            toggleEditMode(isHidden);
+        });
+
+        document.getElementById('cancelEditBtn').addEventListener('click', () => {
+            toggleEditMode(false);
+        });
+
+        document.getElementById('profileForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                nombre: formData.get('nombre').trim(),
+                telefono: formData.get('telefono').trim(),
+                direccion: formData.get('direccion').trim()
+            };
+            
+            if (!data.nombre) {
+                showAlert('El nombre es requerido');
+                return;
+            }
+            
+            updateProfile(data);
+        });
+
+        // Password modal handlers
+        document.getElementById('changePasswordBtn').addEventListener('click', () => {
+            document.getElementById('passwordModal').classList.remove('hidden');
+        });
+
+        document.getElementById('cancelPasswordBtn').addEventListener('click', () => {
+            document.getElementById('passwordModal').classList.add('hidden');
+            document.getElementById('passwordForm').reset();
+        });
+
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            
+            if (newPassword !== confirmNewPassword) {
+                showAlert('Las contraseñas no coinciden');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showAlert('La nueva contraseña debe tener al menos 6 caracteres');
+                return;
+            }
+            
+            showAlert('Funcionalidad de cambio de contraseña no implementada en el backend', 'error');
+            document.getElementById('passwordModal').classList.add('hidden');
+            document.getElementById('passwordForm').reset();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('passwordModal').addEventListener('click', (e) => {
+            if (e.target.id === 'passwordModal') {
+                document.getElementById('passwordModal').classList.add('hidden');
+                document.getElementById('passwordForm').reset();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadProfile();
+            loadStats();
+        });
+    </script>
+</body>
+</html>
