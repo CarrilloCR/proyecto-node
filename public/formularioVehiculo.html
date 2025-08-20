@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Vehículo - Registro de Vehículos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="dashboard.html" class="flex items-center text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        <span>Volver al Dashboard</span>
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <span id="userName" class="text-sm text-gray-700"></span>
+                    <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Loading State -->
+        <div id="loadingState" class="text-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+            <p class="text-gray-600">Cargando información del vehículo...</p>
+        </div>
+
+        <!-- Vehicle Details -->
+        <div id="vehicleContent" class="hidden space-y-6">
+            <!-- Header with Actions -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+                <div>
+                    <h1 id="vehicleTitle" class="text-3xl font-bold text-gray-900"></h1>
+                    <p id="vehicleSubtitle" class="mt-2 text-lg text-gray-600"></p>
+                </div>
+                
+                <div class="flex space-x-3">
+                    <button id="editBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-edit mr-2"></i>Editar
+                    </button>
+                    <button id="deleteBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-trash mr-2"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vehicle Card -->
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                <!-- Status Banner -->
+                <div id="statusBanner" class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="h-12 w-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-car text-indigo-600 text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h2 class="text-lg font-medium text-gray-900">Estado del Vehículo</h2>
+                                <span id="statusBadge" class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"></span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500">Registrado el</p>
+                            <p id="registrationDate" class="text-sm font-medium text-gray-900"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle Information -->
+                <div class="px-6 py-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Basic Info -->
+                        <div class="col-span-full">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                                <i class="fas fa-info-circle text-gray-400 mr-2"></i>
+                                Información Básica
+                            </h3>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-tag text-gray-400 mr-2"></i>
+                                <span class="text-sm font-medium text-gray-600">Marca</span>
+                            </div>
+                            <p id="vehicleMarca" class="text-lg font-semibold text-gray-900"></p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-car text-gray-400 mr-2"></i>
+                                <span class="text-sm font-medium text-gray-600">Modelo</span>
+                            </div>
+                            <p id="vehicleModelo" class="text-lg font-semibold text-gray-900"></p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-calendar text-gray-400 mr-2"></i>
+                                <span class="text-sm font-medium text-gray-600">Año</span>
+                            </div>
+                            <p id="vehicleAño" class="text-lg font-semibold text-gray-900"></p>
+                        </div>
+
+                        <div class="bg-indigo-50 p-4 rounded-lg border-2 border-indigo-200">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-id-card text-indigo-600 mr-2"></i>
+                                <span class="text-sm font-medium text-indigo-700">Placa</span>
+                            </div>
+                            <p id="vehiclePlaca" class="text-xl font-bold text-indigo-900"></p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-palette text-gray-400 mr-2"></i>
+                                <span class="text-sm font-medium text-gray-600">Color</span>
+                            </div>
+                            <p id="vehicleColor" class="text-lg font-semibold text-gray-900"></p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-list text-gray-400 mr-2"></i>
+                                <span class="text-sm font-medium text-gray-600">Tipo</span>
+                            </div>
+                            <p id="vehicleTipo" class="text-lg font-semibold text-gray-900 capitalize"></p>
+                        </div>
+
+                        <!-- Technical Info -->
+                        <div class="col-span-full mt-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                                <i class="fas fa-cogs text-gray-400 mr-2"></i>
+                                Información Técnica
+                            </h3>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-gas-pump text-gray-400 mr-2"></i>
+                                <span class="text-sm font-medium text-gray-600">Combustible</span>
+                            </div>
+                            <p id="vehicleCombustible" class="text-lg font-semibold text-gray-900 capitalize"></p>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-road text-gray-400 mr-2"></i>
+                                <span class="text-sm font-medium text-gray-600">Kilometraje</span>
+                            </div>
+                            <p id="vehicleKilometraje" class="text-lg font-semibold text-gray-900"></p>
+                        </div>
+
+                        <div id="chasisSection" class="bg-gray-50 p-4 rounded-lg hidden">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-barcode text-gray-400 mr-2"></i>
+                                <span class="text-sm font-medium text-gray-600">N° Chasis</span>
+                            </div>
+                            <p id="vehicleChasis" class="text-lg font-semibold text-gray-900"></p>
+                        </div>
+
+                        <div id="motorSection" class="bg-gray-50 p-4 rounded-lg hidden">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-cog text-gray-400 mr-2"></i>
+                                <span class="text-sm font-medium text-gray-600">N° Motor</span>
+                            </div>
+                            <p id="vehicleMotor" class="text-lg font-semibold text-gray-900"></p>
+                        </div>
+
+                        <!-- Owner Info -->
+                        <div class="col-span-full mt-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                                <i class="fas fa-user text-gray-400 mr-2"></i>
+                                Información del Propietario
+                            </h3>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-user text-green-600 mr-2"></i>
+                                <span class="text-sm font-medium text-green-700">Nombre</span>
+                            </div>
+                            <p id="ownerName" class="text-lg font-semibold text-green-900"></p>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-envelope text-green-600 mr-2"></i>
+                                <span class="text-sm font-medium text-green-700">Email</span>
+                            </div>
+                            <p id="ownerEmail" class="text-lg font-semibold text-green-900"></p>
+                        </div>
+
+                        <div id="ownerPhoneSection" class="bg-green-50 p-4 rounded-lg border border-green-200 hidden">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-phone text-green-600 mr-2"></i>
+                                <span class="text-sm font-medium text-green-700">Teléfono</span>
+                            </div>
+                            <p id="ownerPhone" class="text-lg font-semibold text-green-900"></p>
+                        </div>
+
+                        <!-- Timestamps -->
+                        <div class="col-span-full mt-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                                <i class="fas fa-clock text-gray-400 mr-2"></i>
+                                Historial
+                            </h3>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-plus-circle text-blue-600 mr-2"></i>
+                                <span class="text-sm font-medium text-blue-700">Fecha de Registro</span>
+                            </div>
+                            <p id="vehicleCreated" class="text-lg font-semibold text-blue-900"></p>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-edit text-blue-600 mr-2"></i>
+                                <span class="text-sm font-medium text-blue-700">Última Actualización</span>
+                            </div>
+                            <p id="vehicleUpdated" class="text-lg font-semibold text-blue-900"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden text-center py-12">
+            <i class="fas fa-exclamation-triangle text-red-500 text-6xl mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Error al cargar el vehículo</h3>
+            <p class="text-gray-500 mb-4">No se pudo encontrar la información del vehículo solicitado.</p>
+            <a href="dashboard.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition duration-200">
+                Volver al Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg max-w-md w-mx-4">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+                <h3 class="text-lg font-medium text-gray-900">Confirmar Eliminación</h3>
+            </div>
+            
+            <p class="text-gray-600 mb-6">
+                ¿Estás seguro de que deseas eliminar este vehículo? Esta acción no se puede deshacer.
+            </p>
+            
+            <div class="flex justify-end space-x-4">
+                <button id="cancelDeleteBtn" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition duration-200">
+                    Cancelar
+                </button>
+                <button id="confirmDeleteBtn" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition duration-200">
+                    <span id="deleteText">Eliminar</span>
+                    <div id="deleteSpinner" class="hidden ml-2 inline-block">
+                        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert -->
+    <div id="alert" class="hidden fixed top-4 right-4 max-w-sm w-full bg-red-500 text-white p-4 rounded-lg shadow-lg z-50">
+        <div class="flex items-center">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <span id="alertText"></span>
+        </div>
+    </div>
+
+    <script>
+        let vehiculoId = null;
+        let vehicleData = null;
+
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const usuario = localStorage.getItem('usuario');
+            
+            if (!token || !usuario) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            const user = JSON.parse(usuario);
+            document.getElementById('userName').textContent = `Hola, ${user.nombre}`;
+        }
+
+        // Show alert
+        function showAlert(message, type = 'error') {
+            const alert = document.getElementById('alert');
+            const alertText = document.getElementById('alertText');
+            
+            alertText.textContent = message;
+            alert.className = `fixed top-4 right-4 max-w-sm w-full p-4 rounded-lg shadow-lg z-50 ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            } text-white`;
+            alert.classList.remove('hidden');
+            
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 5000);
+        }
+
+        // API call helper
+        async function apiCall(url, options = {}) {
+            const token = localStorage.getItem('token');
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+            
+            return fetch(url, { ...defaultOptions, ...options });
+        }
+
+        // Get estado badge class
+        function getEstadoBadge(estado) {
+            const badges = {
+                'activo': 'bg-green-100 text-green-800',
+                'vendido': 'bg-blue-100 text-blue-800',
+                'siniestrado': 'bg-red-100 text-red-800',
+                'en_mantenimiento': 'bg-yellow-100 text-yellow-800'
+            };
+            return badges[estado] || 'bg-gray-100 text-gray-800';
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Load vehicle data
+        async function loadVehicleData(id) {
+            try {
+                const response = await apiCall(`/api/vehiculos/${id}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    vehicleData = data.vehiculo;
+                    renderVehicleData(vehicleData);
+                    
+                    document.getElementById('loadingState').classList.add('hidden');
+                    document.getElementById('vehicleContent').classList.remove('hidden');
+                } else {
+                    document.getElementById('loadingState').classList.add('hidden');
+                    document.getElementById('errorState').classList.remove('hidden');
+                    showAlert(data.error || 'Error al cargar vehículo');
+                }
+            } catch (error) {
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('errorState').classList.remove('hidden');
+                showAlert('Error de conexión');
+                console.error('Error:', error);
+            }
+        }
+
+        // Render vehicle data
+        function renderVehicleData(vehiculo) {
+            // Header
+            document.getElementById('vehicleTitle').textContent = `${vehiculo.marca} ${vehiculo.modelo}`;
+            document.getElementById('vehicleSubtitle').textContent = `${vehiculo.año} • Placa: ${vehiculo.placa}`;
+            
+            // Status
+            const statusBadge = document.getElementById('statusBadge');
+            statusBadge.textContent = vehiculo.estado.replace('_', ' ').toUpperCase();
+            statusBadge.className = `inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getEstadoBadge(vehiculo.estado)}`;
+            
+            document.getElementById('registrationDate').textContent = formatDate(vehiculo.fechaRegistro);
+            
+            // Basic info
+            document.getElementById('vehicleMarca').textContent = vehiculo.marca;
+            document.getElementById('vehicleModelo').textContent = vehiculo.modelo;
+            document.getElementById('vehicleAño').textContent = vehiculo.año;
+            document.getElementById('vehiclePlaca').textContent = vehiculo.placa;
+            document.getElementById('vehicleColor').textContent = vehiculo.color;
+            document.getElementById('vehicleTipo').textContent = vehiculo.tipoVehiculo;
+            
+            // Technical info
+            document.getElementById('vehicleCombustible').textContent = vehiculo.combustible;
+            document.getElementById('vehicleKilometraje').textContent = `${vehiculo.kilometraje?.toLocaleString() || 0} km`;
+            
+            // Optional fields
+            if (vehiculo.numeroChasis) {
+                document.getElementById('vehicleChasis').textContent = vehiculo.numeroChasis;
+                document.getElementById('chasisSection').classList.remove('hidden');
+            }
+            
+            if (vehiculo.numeroMotor) {
+                document.getElementById('vehicleMotor').textContent = vehiculo.numeroMotor;
+                document.getElementById('motorSection').classList.remove('hidden');
+            }
+            
+            // Owner info
+            document.getElementById('ownerName').textContent = vehiculo.propietario.nombre;
+            document.getElementById('ownerEmail').textContent = vehiculo.propietario.email;
+            
+            if (vehiculo.propietario.telefono) {
+                document.getElementById('ownerPhone').textContent = vehiculo.propietario.telefono;
+                document.getElementById('ownerPhoneSection').classList.remove('hidden');
+            }
+            
+            // Timestamps
+            document.getElementById('vehicleCreated').textContent = formatDate(vehiculo.fechaRegistro);
+            document.getElementById('vehicleUpdated').textContent = formatDate(vehiculo.fechaUltimaActualizacion);
+        }
+
+        // Delete vehicle
+        async function deleteVehicle() {
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            const deleteText = document.getElementById('deleteText');
+            const deleteSpinner = document.getElementById('deleteSpinner');
+            
+            // Show loading state
+            confirmBtn.disabled = true;
+            deleteText.textContent = 'Eliminando...';
+            deleteSpinner.classList.remove('hidden');
+            
+            try {
+                const response = await apiCall(`/api/vehiculos/${vehiculoId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showAlert('Vehículo eliminado correctamente', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    showAlert(result.error || 'Error al eliminar vehículo');
+                }
+            } catch (error) {
+                showAlert('Error de conexión');
+                console.error('Error:', error);
+            } finally {
+                // Reset loading state
+                confirmBtn.disabled = false;
+                deleteText.textContent = 'Eliminar';
+                deleteSpinner.classList.add('hidden');
+                document.getElementById('deleteModal').classList.add('hidden');
+            }
+        }
+
+        // Event listeners
+        document.getElementById('editBtn').addEventListener('click', () => {
+            window.location.href = `vehiculo-form.html?id=${vehiculoId}`;
+        });
+
+        document.getElementById('deleteBtn').addEventListener('click', () => {
+            document.getElementById('deleteModal').classList.remove('hidden');
+        });
+
+        document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+            document.getElementById('deleteModal').classList.add('hidden');
+        });
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', deleteVehicle);
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            vehiculoId = urlParams.get('id');
+            
+            if (!vehiculoId) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            
+            loadVehicleData(vehiculoId);
+        });
+    </script>
+</body>
+</html>
