@@ -45,8 +45,8 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'API de Registro de Vehículos funcionando correctamente' });
 });
 
-// Middleware para manejar rutas no encontradas
-app.use('*', (req, res) => {
+// Middleware para manejar rutas no encontradas - CORREGIDO
+app.use((req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
 });
 
