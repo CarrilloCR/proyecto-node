@@ -1,5 +1,6 @@
-const Usuario = require('../models/usuarios');
-const jwt = require('jsonwebtoken');
+require("dotenv").config();
+const Usuario = require("../models/usuarios");
+const jwt = require("jsonwebtoken");
 
 const authController = {
   // Registro de usuario
@@ -10,7 +11,7 @@ const authController = {
       // Verificar si el usuario ya existe
       const usuarioExistente = await Usuario.findOne({ email });
       if (usuarioExistente) {
-        return res.status(400).json({ error: 'El email ya está registrado' });
+        return res.status(400).json({ error: "El email ya está registrado" });
       }
 
       // Crear nuevo usuario
@@ -19,30 +20,29 @@ const authController = {
         email,
         clave,
         telefono,
-        direccion
+        direccion,
       });
 
       await nuevoUsuario.save();
 
-      // Generar token
+      // Generar token con secreto del .env
       const token = jwt.sign(
         { id: nuevoUsuario._id, email: nuevoUsuario.email },
-        'SECRETO_SUPER_SEGUR0',
-        { expiresIn: '7d' }
+        process.env.JWT_SECRET, 
+        { expiresIn: "7d" }
       );
 
       res.status(201).json({
-        message: 'Usuario registrado exitosamente',
+        message: "Usuario registrado exitosamente",
         token,
         usuario: {
           id: nuevoUsuario._id,
           nombre: nuevoUsuario.nombre,
           email: nuevoUsuario.email,
           telefono: nuevoUsuario.telefono,
-          direccion: nuevoUsuario.direccion
-        }
+          direccion: nuevoUsuario.direccion,
+        },
       });
-
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -56,34 +56,33 @@ const authController = {
       // Buscar usuario
       const usuario = await Usuario.findOne({ email });
       if (!usuario) {
-        return res.status(401).json({ error: 'Credenciales inválidas' });
+        return res.status(401).json({ error: "Credenciales inválidas" });
       }
 
       // Verificar contraseña
       const claveValida = await usuario.compararClave(clave);
       if (!claveValida) {
-        return res.status(401).json({ error: 'Credenciales inválidas' });
+        return res.status(401).json({ error: "Credenciales inválidas" });
       }
 
-      // Generar token
+      // Generar token con secreto del .env
       const token = jwt.sign(
         { id: usuario._id, email: usuario.email },
-        'SECRETO_SUPER_SEGUR0',
-        { expiresIn: '7d' }
+        process.env.JWT_SECRET, // ✅ usa el mismo secreto
+        { expiresIn: "7d" }
       );
 
       res.json({
-        message: 'Login exitoso',
+        message: "Login exitoso",
         token,
         usuario: {
           id: usuario._id,
           nombre: usuario.nombre,
           email: usuario.email,
           telefono: usuario.telefono,
-          direccion: usuario.direccion
-        }
+          direccion: usuario.direccion,
+        },
       });
-
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -92,9 +91,9 @@ const authController = {
   // Obtener perfil del usuario autenticado
   async perfil(req, res) {
     try {
-      const usuario = await Usuario.findById(req.usuarioId).select('-clave');
+      const usuario = await Usuario.findById(req.usuarioId).select("-clave");
       if (!usuario) {
-        return res.status(404).json({ error: 'Usuario no encontrado' });
+        return res.status(404).json({ error: "Usuario no encontrado" });
       }
 
       res.json({ usuario });
@@ -107,26 +106,25 @@ const authController = {
   async actualizarPerfil(req, res) {
     try {
       const { nombre, telefono, direccion } = req.body;
-      
+
       const usuario = await Usuario.findByIdAndUpdate(
         req.usuarioId,
         { nombre, telefono, direccion },
         { new: true, runValidators: true }
-      ).select('-clave');
+      ).select("-clave");
 
       if (!usuario) {
-        return res.status(404).json({ error: 'Usuario no encontrado' });
+        return res.status(404).json({ error: "Usuario no encontrado" });
       }
 
       res.json({
-        message: 'Perfil actualizado exitosamente',
-        usuario
+        message: "Perfil actualizado exitosamente",
+        usuario,
       });
-
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-  }
+  },
 };
 
 module.exports = authController;

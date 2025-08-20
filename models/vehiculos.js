@@ -4,17 +4,20 @@ const vehiculoSchema = new Schema({
   propietario: { 
     type: Types.ObjectId, 
     ref: 'Usuario',
-    required: true
+    required: true,
+    index: true // Índice para mejorar performance en consultas por propietario
   },
   marca: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    index: true // Índice para mejorar performance en consultas por marca
   },
   modelo: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    index: true // Índice para mejorar performance en consultas por modelo
   },
   año: {
     type: Number,
@@ -27,7 +30,8 @@ const vehiculoSchema = new Schema({
     required: true,
     unique: true,
     uppercase: true,
-    trim: true
+    trim: true,
+    index: true // Índice para mejorar performance en consultas por placa
   },
   color: {
     type: String,
@@ -95,9 +99,6 @@ vehiculoSchema.pre('updateMany', function(next) {
   next();
 });
 
-// Índices para mejorar performance
-vehiculoSchema.index({ propietario: 1 });
-vehiculoSchema.index({ placa: 1 });
-vehiculoSchema.index({ marca: 1, modelo: 1 });
+
 
 module.exports = model('Vehiculo', vehiculoSchema);

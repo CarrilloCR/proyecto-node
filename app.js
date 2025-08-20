@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+require('dotenv').config(); // Cargar variables de entorno desde .env
 
 // Importar rutas correctas
 const authRoutes = require('./routes/usuario');
@@ -17,18 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 // Servir archivos estáticos desde la carpeta public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Conexión a MongoDB Atlas
-const mongoURI = 'mongodb+srv://fabiancarrillo2k:tfi4LadqksCKt495@carris.jtildip.mongodb.net/registro_vehiculos?retryWrites=true&w=majority&appName=carris';
 
-mongoose.connect(mongoURI);
-
-mongoose.connection.on('connected', () => {
-  console.log('✅ Conectado a MongoDB Atlas');
-});
-
-mongoose.connection.on('error', (err) => {
-  console.error('❌ Error de conexión a MongoDB:', err);
-});
 
 mongoose.connection.on('disconnected', () => {
   console.log('🔌 Desconectado de MongoDB');
@@ -63,10 +53,16 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Error interno del servidor' });
 });
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor API escuchando en http://localhost:${PORT}`);
+
+// Conexión a MongoDB usando el URI desde .env
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log("✅ Conectado a MongoDB"))
+  .catch(err => console.error("❌ Error al conectar a MongoDB:", err));
+
+app.listen(process.env.PORT || 4000, () => {
+  console.log(`🚀 Servidor API escuchando en http://localhost:${process.env.PORT}`);
 });
+
 
 // Manejo de cierre graceful
 process.on('SIGINT', async () => {
