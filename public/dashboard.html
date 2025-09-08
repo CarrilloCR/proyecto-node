@@ -35,7 +35,53 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Stats Cards -->
         <div id="statsSection" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <!-- Stats will be loaded here -->
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex items-center">
+                    <div class="p-3 bg-blue-100 rounded-full">
+                        <i class="fas fa-car text-blue-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Total Vehículos</p>
+                        <p id="totalVehiculos" class="text-2xl font-semibold text-gray-900">0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex items-center">
+                    <div class="p-3 bg-green-100 rounded-full">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Activos</p>
+                        <p id="vehiculosActivos" class="text-2xl font-semibold text-gray-900">0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex items-center">
+                    <div class="p-3 bg-yellow-100 rounded-full">
+                        <i class="fas fa-calendar text-yellow-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Año Promedio</p>
+                        <p id="anoPromedio" class="text-2xl font-semibold text-gray-900">0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex items-center">
+                    <div class="p-3 bg-purple-100 rounded-full">
+                        <i class="fas fa-road text-purple-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">KM Promedio</p>
+                        <p id="kmPromedio" class="text-2xl font-semibold text-gray-900">0</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Actions Header -->
@@ -118,7 +164,7 @@
         <!-- Pagination -->
         <div id="pagination" class="flex justify-between items-center mt-6">
             <div class="text-sm text-gray-700">
-                <span id="paginationInfo"></span>
+                <span id="paginationInfo">Mostrando 0 de 0 vehículos</span>
             </div>
             <div class="flex space-x-2">
                 <button id="prevBtn" class="px-3 py-1 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -126,6 +172,27 @@
                 </button>
                 <button id="nextBtn" class="px-3 py-1 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+            <div class="flex items-center mb-4">
+                <i id="confirmIcon" class="text-2xl mr-3"></i>
+                <h3 id="confirmTitle" class="text-lg font-medium text-gray-900"></h3>
+            </div>
+            
+            <p id="confirmMessage" class="text-gray-600 mb-6"></p>
+            
+            <div class="flex justify-end space-x-3">
+                <button id="cancelConfirm" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition duration-200">
+                    Cancelar
+                </button>
+                <button id="acceptConfirm" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition duration-200">
+                    Confirmar
                 </button>
             </div>
         </div>
@@ -153,6 +220,7 @@
         let currentPage = 1;
         let totalPages = 1;
         let vehiculos = [];
+        let filteredVehiculos = [];
 
         // Check authentication
         function checkAuth() {
@@ -184,12 +252,53 @@
             }, 5000);
         }
 
-        // Show loading
+        // Show confirmation modal
+        function showConfirmModal(title, message, onConfirm, type = 'danger') {
+            const modal = document.getElementById('confirmModal');
+            const icon = document.getElementById('confirmIcon');
+            const titleEl = document.getElementById('confirmTitle');
+            const messageEl = document.getElementById('confirmMessage');
+            const acceptBtn = document.getElementById('acceptConfirm');
+            
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            
+            if (type === 'logout') {
+                icon.className = 'fas fa-sign-out-alt text-blue-500 text-2xl mr-3';
+                acceptBtn.className = 'px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition duration-200';
+                acceptBtn.textContent = 'Cerrar Sesión';
+            } else {
+                icon.className = 'fas fa-exclamation-triangle text-red-500 text-2xl mr-3';
+                acceptBtn.className = 'px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition duration-200';
+                acceptBtn.textContent = 'Eliminar';
+            }
+            
+            modal.classList.remove('hidden');
+            
+            // Set up one-time event listeners
+            const handleConfirm = () => {
+                modal.classList.add('hidden');
+                onConfirm();
+                acceptBtn.removeEventListener('click', handleConfirm);
+                cancelBtn.removeEventListener('click', handleCancel);
+            };
+            
+            const handleCancel = () => {
+                modal.classList.add('hidden');
+                acceptBtn.removeEventListener('click', handleConfirm);
+                cancelBtn.removeEventListener('click', handleCancel);
+            };
+            
+            const cancelBtn = document.getElementById('cancelConfirm');
+            acceptBtn.addEventListener('click', handleConfirm);
+            cancelBtn.addEventListener('click', handleCancel);
+        }
+
+        // Show/hide loading
         function showLoading() {
             document.getElementById('loadingOverlay').classList.remove('hidden');
         }
 
-        // Hide loading
         function hideLoading() {
             document.getElementById('loadingOverlay').classList.add('hidden');
         }
@@ -211,68 +320,61 @@
         async function loadStats() {
             try {
                 const response = await apiCall('/api/vehiculos/estadisticas');
-                const stats = await response.json();
                 
                 if (response.ok) {
-                    renderStats(stats);
+                    const stats = await response.json();
+                    updateStatsDisplay(stats);
+                } else {
+                    // If API fails, calculate from loaded vehicles
+                    if (vehiculos.length > 0) {
+                        const calculatedStats = calculateStatsFromVehicles(vehiculos);
+                        updateStatsDisplay(calculatedStats);
+                    }
                 }
             } catch (error) {
                 console.error('Error loading stats:', error);
+                // Fallback to calculating from loaded vehicles
+                if (vehiculos.length > 0) {
+                    const calculatedStats = calculateStatsFromVehicles(vehiculos);
+                    updateStatsDisplay(calculatedStats);
+                }
             }
         }
 
-        // Render statistics
-        function renderStats(stats) {
-            const statsSection = document.getElementById('statsSection');
-            statsSection.innerHTML = `
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="flex items-center">
-                        <div class="p-3 bg-blue-100 rounded-full">
-                            <i class="fas fa-car text-blue-600 text-xl"></i>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-gray-600">Total Vehículos</p>
-                            <p class="text-2xl font-semibold text-gray-900">${stats.total || 0}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="flex items-center">
-                        <div class="p-3 bg-green-100 rounded-full">
-                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-gray-600">Activos</p>
-                            <p class="text-2xl font-semibold text-gray-900">${stats.porEstado?.activo || 0}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="flex items-center">
-                        <div class="p-3 bg-yellow-100 rounded-full">
-                            <i class="fas fa-calendar text-yellow-600 text-xl"></i>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-gray-600">Año Promedio</p>
-                            <p class="text-2xl font-semibold text-gray-900">${stats.añoPromedio || 0}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="flex items-center">
-                        <div class="p-3 bg-purple-100 rounded-full">
-                            <i class="fas fa-road text-purple-600 text-xl"></i>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-gray-600">KM Promedio</p>
-                            <p class="text-2xl font-semibold text-gray-900">${Math.round(stats.kilometrajePromedio || 0).toLocaleString()}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
+        // Calculate statistics from vehicles array
+        function calculateStatsFromVehicles(vehiclesArray) {
+            if (!vehiclesArray || vehiclesArray.length === 0) {
+                return {
+                    total: 0,
+                    porEstado: { activo: 0 },
+                    añoPromedio: 0,
+                    kilometrajePromedio: 0
+                };
+            }
+
+            const total = vehiclesArray.length;
+            const activos = vehiclesArray.filter(v => v.estado === 'activo').length;
+            
+            const años = vehiclesArray.filter(v => v.año).map(v => v.año);
+            const añoPromedio = años.length > 0 ? Math.round(años.reduce((a, b) => a + b, 0) / años.length) : 0;
+            
+            const kms = vehiclesArray.filter(v => v.kilometraje && v.kilometraje > 0).map(v => v.kilometraje);
+            const kmPromedio = kms.length > 0 ? Math.round(kms.reduce((a, b) => a + b, 0) / kms.length) : 0;
+
+            return {
+                total,
+                porEstado: { activo: activos },
+                añoPromedio,
+                kilometrajePromedio: kmPromedio
+            };
+        }
+
+        // Update statistics display
+        function updateStatsDisplay(stats) {
+            document.getElementById('totalVehiculos').textContent = stats.total || 0;
+            document.getElementById('vehiculosActivos').textContent = stats.porEstado?.activo || 0;
+            document.getElementById('anoPromedio').textContent = stats.añoPromedio || 0;
+            document.getElementById('kmPromedio').textContent = (stats.kilometrajePromedio || 0).toLocaleString();
         }
 
         // Load vehicles
@@ -281,29 +383,54 @@
             try {
                 const params = new URLSearchParams({
                     page: page,
-                    limit: 10,
+                    limit: 50, // Increased to get more data for filtering
                     ...filters
                 });
                 
                 const response = await apiCall(`/api/vehiculos?${params}`);
-                const data = await response.json();
                 
                 if (response.ok) {
-                    vehiculos = data.vehiculos;
-                    currentPage = parseInt(data.paginaActual);
-                    totalPages = data.totalPaginas;
+                    const data = await response.json();
+                    vehiculos = data.vehiculos || [];
                     
-                    renderVehicles(vehiculos);
-                    updatePagination(data);
+                    // Apply search filter if exists
+                    applyFilters();
+                    
+                    // Update statistics with all vehicles
+                    const statsData = calculateStatsFromVehicles(vehiculos);
+                    updateStatsDisplay(statsData);
+                    
                 } else {
-                    showAlert(data.error || 'Error al cargar vehículos');
+                    const errorData = await response.json();
+                    showAlert(errorData.error || 'Error al cargar vehículos');
+                    vehiculos = [];
+                    filteredVehiculos = [];
                 }
             } catch (error) {
                 showAlert('Error de conexión');
                 console.error('Error:', error);
+                vehiculos = [];
+                filteredVehiculos = [];
             } finally {
                 hideLoading();
             }
+        }
+
+        // Apply filters to vehicles
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredVehiculos = vehiculos.filter(vehiculo => {
+                const matchesSearch = !searchTerm || 
+                    vehiculo.placa.toLowerCase().includes(searchTerm) ||
+                    vehiculo.marca.toLowerCase().includes(searchTerm) ||
+                    vehiculo.modelo.toLowerCase().includes(searchTerm);
+                
+                return matchesSearch;
+            });
+            
+            renderVehicles(filteredVehiculos);
+            updatePagination();
         }
 
         // Render vehicles
@@ -311,7 +438,7 @@
             const tbody = document.getElementById('vehiclesTableBody');
             const emptyState = document.getElementById('emptyState');
             
-            if (vehicles.length === 0) {
+            if (!vehicles || vehicles.length === 0) {
                 tbody.innerHTML = '';
                 emptyState.classList.remove('hidden');
                 return;
@@ -337,11 +464,11 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getEstadoBadge(vehiculo.estado)}">
-                            ${vehiculo.estado.replace('_', ' ')}
+                            ${getEstadoText(vehiculo.estado)}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 capitalize">
-                        ${vehiculo.tipoVehiculo}
+                        ${getTipoText(vehiculo.tipoVehiculo)}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         ${new Date(vehiculo.fechaRegistro).toLocaleDateString('es-ES')}
@@ -354,7 +481,7 @@
                             <button onclick="editVehicle('${vehiculo._id}')" class="text-yellow-600 hover:text-yellow-900 p-1" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button onclick="deleteVehicle('${vehiculo._id}')" class="text-red-600 hover:text-red-900 p-1" title="Eliminar">
+                            <button onclick="deleteVehicle('${vehiculo._id}', '${vehiculo.marca} ${vehiculo.modelo} - ${vehiculo.placa}')" class="text-red-600 hover:text-red-900 p-1" title="Eliminar">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -374,13 +501,38 @@
             return badges[estado] || 'bg-gray-100 text-gray-800';
         }
 
-        // Update pagination
-        function updatePagination(data) {
-            document.getElementById('paginationInfo').textContent = 
-                `Mostrando ${data.vehiculos.length} de ${data.total} vehículos`;
+        // Get estado text
+        function getEstadoText(estado) {
+            const textos = {
+                'activo': 'Activo',
+                'vendido': 'Vendido',
+                'siniestrado': 'Siniestrado',
+                'en_mantenimiento': 'En Mantenimiento'
+            };
+            return textos[estado] || estado;
+        }
+
+        // Get tipo text
+        function getTipoText(tipo) {
+            const textos = {
+                'automovil': 'Automóvil',
+                'motocicleta': 'Motocicleta',
+                'camion': 'Camión',
+                'suv': 'SUV',
+                'van': 'Van',
+                'pickup': 'Pickup'
+            };
+            return textos[tipo] || tipo;
+        }
+
+        // Update pagination info
+        function updatePagination() {
+            const total = filteredVehiculos.length;
+            document.getElementById('paginationInfo').textContent = `Mostrando ${total} de ${vehiculos.length} vehículos`;
             
-            document.getElementById('prevBtn').disabled = currentPage <= 1;
-            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+            // For now, disable pagination buttons as we're showing all results
+            document.getElementById('prevBtn').disabled = true;
+            document.getElementById('nextBtn').disabled = true;
         }
 
         // Vehicle actions
@@ -392,33 +544,40 @@
             window.location.href = `vehiculo-form.html?id=${id}`;
         }
 
-        async function deleteVehicle(id) {
-            if (!confirm('¿Estás seguro de que deseas eliminar este vehículo?')) {
-                return;
-            }
-            
+        function deleteVehicle(id, vehicleName) {
+            showConfirmModal(
+                'Eliminar Vehículo',
+                `¿Estás seguro de que deseas eliminar el vehículo ${vehicleName}? Esta acción no se puede deshacer.`,
+                async () => {
+                    await performDeleteVehicle(id);
+                }
+            );
+        }
+
+        async function performDeleteVehicle(id) {
+            showLoading();
             try {
                 const response = await apiCall(`/api/vehiculos/${id}`, {
                     method: 'DELETE'
                 });
                 
-                const result = await response.json();
-                
                 if (response.ok) {
                     showAlert('Vehículo eliminado correctamente', 'success');
-                    loadVehicles(currentPage);
-                    loadStats();
+                    await loadVehicles();
                 } else {
+                    const result = await response.json();
                     showAlert(result.error || 'Error al eliminar vehículo');
                 }
             } catch (error) {
                 showAlert('Error de conexión');
                 console.error('Error:', error);
+            } finally {
+                hideLoading();
             }
         }
 
-        // Get filters
-        function getFilters() {
+        // Get current filters
+        function getCurrentFilters() {
             const estado = document.getElementById('filterEstado').value;
             const tipoVehiculo = document.getElementById('filterTipo').value;
             
@@ -442,10 +601,20 @@
             };
         }
 
-        // Event listeners
-        document.getElementById('logoutBtn').addEventListener('click', () => {
+        // Logout function
+        function performLogout() {
             localStorage.clear();
             window.location.href = 'login.html';
+        }
+
+        // Event listeners
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            showConfirmModal(
+                'Cerrar Sesión',
+                '¿Estás seguro de que deseas cerrar sesión?',
+                performLogout,
+                'logout'
+            );
         });
 
         document.getElementById('profileBtn').addEventListener('click', () => {
@@ -460,41 +629,27 @@
             window.location.href = 'vehiculo-form.html';
         });
 
-        document.getElementById('refreshBtn').addEventListener('click', () => {
-            loadVehicles(currentPage, getFilters());
-            loadStats();
-        });
-
-        document.getElementById('prevBtn').addEventListener('click', () => {
-            if (currentPage > 1) {
-                loadVehicles(currentPage - 1, getFilters());
-            }
-        });
-
-        document.getElementById('nextBtn').addEventListener('click', () => {
-            if (currentPage < totalPages) {
-                loadVehicles(currentPage + 1, getFilters());
-            }
+        document.getElementById('refreshBtn').addEventListener('click', async () => {
+            await loadVehicles(1, getCurrentFilters());
         });
 
         // Filter event listeners
-        document.getElementById('filterEstado').addEventListener('change', () => {
-            loadVehicles(1, getFilters());
+        document.getElementById('filterEstado').addEventListener('change', async () => {
+            await loadVehicles(1, getCurrentFilters());
         });
 
-        document.getElementById('filterTipo').addEventListener('change', () => {
-            loadVehicles(1, getFilters());
+        document.getElementById('filterTipo').addEventListener('change', async () => {
+            await loadVehicles(1, getCurrentFilters());
         });
 
         document.getElementById('searchInput').addEventListener('input', debounce(() => {
-            loadVehicles(1, getFilters());
-        }, 500));
+            applyFilters();
+        }, 300));
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             checkAuth();
-            loadStats();
-            loadVehicles();
+            await loadVehicles();
         });
     </script>
 </body>
