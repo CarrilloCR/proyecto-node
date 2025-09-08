@@ -45,9 +45,9 @@
                         <i class="fas fa-user text-indigo-600 text-3xl"></i>
                     </div>
                     <div class="ml-6">
-                        <h2 id="profileName" class="text-2xl font-bold text-white"></h2>
-                        <p id="profileEmail" class="text-indigo-100"></p>
-                        <p id="profileMemberSince" class="text-indigo-200 text-sm mt-1"></p>
+                        <h2 id="profileName" class="text-2xl font-bold text-white">Cargando...</h2>
+                        <p id="profileEmail" class="text-indigo-100">Cargando...</p>
+                        <p id="profileMemberSince" class="text-indigo-200 text-sm mt-1">Cargando...</p>
                     </div>
                 </div>
             </div>
@@ -64,22 +64,22 @@
                         <div class="space-y-4">
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Nombre Completo</label>
-                                <p id="infoNombre" class="text-lg font-semibold text-gray-900"></p>
+                                <p id="infoNombre" class="text-lg font-semibold text-gray-900">Cargando...</p>
                             </div>
                             
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Correo Electrónico</label>
-                                <p id="infoEmail" class="text-lg font-semibold text-gray-900"></p>
+                                <p id="infoEmail" class="text-lg font-semibold text-gray-900">Cargando...</p>
                             </div>
                             
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Teléfono</label>
-                                <p id="infoTelefono" class="text-lg font-semibold text-gray-900"></p>
+                                <p id="infoTelefono" class="text-lg font-semibold text-gray-900">Cargando...</p>
                             </div>
                             
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Dirección</label>
-                                <p id="infoDireccion" class="text-lg font-semibold text-gray-900"></p>
+                                <p id="infoDireccion" class="text-lg font-semibold text-gray-900">Cargando...</p>
                             </div>
                         </div>
                     </div>
@@ -140,7 +140,53 @@
                         </h3>
                         
                         <div id="userStats" class="space-y-4">
-                            <!-- Stats will be loaded here -->
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="p-2 bg-blue-100 rounded-full">
+                                        <i class="fas fa-car text-blue-600"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-gray-600">Total Vehículos</p>
+                                        <p id="statTotalVehiculos" class="text-xl font-semibold text-gray-900">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="p-2 bg-green-100 rounded-full">
+                                        <i class="fas fa-check-circle text-green-600"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-gray-600">Vehículos Activos</p>
+                                        <p id="statVehiculosActivos" class="text-xl font-semibold text-gray-900">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-yellow-50 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="p-2 bg-yellow-100 rounded-full">
+                                        <i class="fas fa-calendar text-yellow-600"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-gray-600">Año Promedio</p>
+                                        <p id="statAnoPromedio" class="text-xl font-semibold text-gray-900">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-purple-50 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="p-2 bg-purple-100 rounded-full">
+                                        <i class="fas fa-road text-purple-600"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-gray-600">KM Promedio</p>
+                                        <p id="statKmPromedio" class="text-xl font-semibold text-gray-900">0</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -206,6 +252,27 @@
         </div>
     </div>
 
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+            <div class="flex items-center mb-4">
+                <i id="confirmIcon" class="fas fa-sign-out-alt text-blue-500 text-2xl mr-3"></i>
+                <h3 id="confirmTitle" class="text-lg font-medium text-gray-900">Cerrar Sesión</h3>
+            </div>
+            
+            <p id="confirmMessage" class="text-gray-600 mb-6">¿Estás seguro de que deseas cerrar sesión?</p>
+            
+            <div class="flex justify-end space-x-3">
+                <button id="cancelConfirm" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition duration-200">
+                    Cancelar
+                </button>
+                <button id="acceptConfirm" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition duration-200">
+                    Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Alert -->
     <div id="alert" class="hidden fixed top-4 right-4 max-w-sm w-full bg-red-500 text-white p-4 rounded-lg shadow-lg z-50">
         <div class="flex items-center">
@@ -226,6 +293,7 @@
 
     <script>
         let currentUser = null;
+        let vehiculos = [];
 
         // Check authentication
         function checkAuth() {
@@ -257,6 +325,35 @@
             }, 5000);
         }
 
+        // Show confirmation modal
+        function showConfirmModal(title, message, onConfirm) {
+            const modal = document.getElementById('confirmModal');
+            const titleEl = document.getElementById('confirmTitle');
+            const messageEl = document.getElementById('confirmMessage');
+            
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            modal.classList.remove('hidden');
+            
+            const handleConfirm = () => {
+                modal.classList.add('hidden');
+                onConfirm();
+                acceptBtn.removeEventListener('click', handleConfirm);
+                cancelBtn.removeEventListener('click', handleCancel);
+            };
+            
+            const handleCancel = () => {
+                modal.classList.add('hidden');
+                acceptBtn.removeEventListener('click', handleConfirm);
+                cancelBtn.removeEventListener('click', handleCancel);
+            };
+            
+            const acceptBtn = document.getElementById('acceptConfirm');
+            const cancelBtn = document.getElementById('cancelConfirm');
+            acceptBtn.addEventListener('click', handleConfirm);
+            cancelBtn.addEventListener('click', handleCancel);
+        }
+
         // Show/hide loading
         function showLoading() {
             document.getElementById('loadingOverlay').classList.remove('hidden');
@@ -284,107 +381,135 @@
             showLoading();
             try {
                 const response = await apiCall('/api/auth/perfil');
-                const data = await response.json();
                 
                 if (response.ok) {
+                    const data = await response.json();
                     displayProfile(data.usuario);
                 } else {
-                    showAlert(data.error || 'Error al cargar perfil');
+                    // If API fails, use localStorage data
+                    if (currentUser) {
+                        displayProfile(currentUser);
+                    } else {
+                        showAlert('Error al cargar perfil');
+                    }
                 }
             } catch (error) {
-                showAlert('Error de conexión');
-                console.error('Error:', error);
+                console.error('Error loading profile:', error);
+                // Fallback to localStorage data
+                if (currentUser) {
+                    displayProfile(currentUser);
+                } else {
+                    showAlert('Error de conexión');
+                }
             } finally {
                 hideLoading();
             }
         }
 
-        // Load user statistics
-        async function loadStats() {
+        // Load vehicles for statistics
+        async function loadVehiclesForStats() {
             try {
-                const response = await apiCall('/api/vehiculos/estadisticas');
-                const stats = await response.json();
+                const response = await apiCall('/api/vehiculos?limit=100');
                 
                 if (response.ok) {
+                    const data = await response.json();
+                    vehiculos = data.vehiculos || [];
+                    calculateAndDisplayStats();
+                } else {
+                    // Try with statistics endpoint
+                    await loadStatsFromAPI();
+                }
+            } catch (error) {
+                console.error('Error loading vehicles:', error);
+                await loadStatsFromAPI();
+            }
+        }
+
+        // Load stats from API
+        async function loadStatsFromAPI() {
+            try {
+                const response = await apiCall('/api/vehiculos/estadisticas');
+                
+                if (response.ok) {
+                    const stats = await response.json();
                     displayStats(stats);
+                } else {
+                    // Show default stats
+                    displayStats({
+                        total: 0,
+                        porEstado: { activo: 0 },
+                        añoPromedio: 0,
+                        kilometrajePromedio: 0
+                    });
                 }
             } catch (error) {
                 console.error('Error loading stats:', error);
+                displayStats({
+                    total: 0,
+                    porEstado: { activo: 0 },
+                    añoPromedio: 0,
+                    kilometrajePromedio: 0
+                });
             }
+        }
+
+        // Calculate statistics from vehicles
+        function calculateAndDisplayStats() {
+            if (!vehiculos || vehiculos.length === 0) {
+                displayStats({
+                    total: 0,
+                    porEstado: { activo: 0 },
+                    añoPromedio: 0,
+                    kilometrajePromedio: 0
+                });
+                return;
+            }
+
+            const total = vehiculos.length;
+            const activos = vehiculos.filter(v => v.estado === 'activo').length;
+            
+            const años = vehiculos.filter(v => v.año).map(v => v.año);
+            const añoPromedio = años.length > 0 ? Math.round(años.reduce((a, b) => a + b, 0) / años.length) : 0;
+            
+            const kms = vehiculos.filter(v => v.kilometraje && v.kilometraje > 0).map(v => v.kilometraje);
+            const kmPromedio = kms.length > 0 ? Math.round(kms.reduce((a, b) => a + b, 0) / kms.length) : 0;
+
+            displayStats({
+                total,
+                porEstado: { activo: activos },
+                añoPromedio,
+                kilometrajePromedio: kmPromedio
+            });
         }
 
         // Display profile information
         function displayProfile(usuario) {
             // Header
-            document.getElementById('profileName').textContent = usuario.nombre;
-            document.getElementById('profileEmail').textContent = usuario.email;
+            document.getElementById('profileName').textContent = usuario.nombre || 'Usuario';
+            document.getElementById('profileEmail').textContent = usuario.email || 'No especificado';
+            
+            const fechaRegistro = usuario.fechaRegistro || new Date().toISOString();
             document.getElementById('profileMemberSince').textContent = 
-                `Miembro desde ${new Date(usuario.fechaRegistro).toLocaleDateString('es-ES')}`;
+                `Miembro desde ${new Date(fechaRegistro).toLocaleDateString('es-ES')}`;
 
             // Info cards
-            document.getElementById('infoNombre').textContent = usuario.nombre;
-            document.getElementById('infoEmail').textContent = usuario.email;
+            document.getElementById('infoNombre').textContent = usuario.nombre || 'No especificado';
+            document.getElementById('infoEmail').textContent = usuario.email || 'No especificado';
             document.getElementById('infoTelefono').textContent = usuario.telefono || 'No especificado';
             document.getElementById('infoDireccion').textContent = usuario.direccion || 'No especificada';
 
             // Form fields
-            document.getElementById('nombre').value = usuario.nombre;
+            document.getElementById('nombre').value = usuario.nombre || '';
             document.getElementById('telefono').value = usuario.telefono || '';
             document.getElementById('direccion').value = usuario.direccion || '';
         }
 
         // Display statistics
         function displayStats(stats) {
-            const statsContainer = document.getElementById('userStats');
-            statsContainer.innerHTML = `
-                <div class="bg-blue-50 p-4 rounded-lg">
-                    <div class="flex items-center">
-                        <div class="p-2 bg-blue-100 rounded-full">
-                            <i class="fas fa-car text-blue-600"></i>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-gray-600">Total Vehículos</p>
-                            <p class="text-xl font-semibold text-gray-900">${stats.total || 0}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-green-50 p-4 rounded-lg">
-                    <div class="flex items-center">
-                        <div class="p-2 bg-green-100 rounded-full">
-                            <i class="fas fa-check-circle text-green-600"></i>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-gray-600">Vehículos Activos</p>
-                            <p class="text-xl font-semibold text-gray-900">${stats.porEstado?.activo || 0}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-yellow-50 p-4 rounded-lg">
-                    <div class="flex items-center">
-                        <div class="p-2 bg-yellow-100 rounded-full">
-                            <i class="fas fa-calendar text-yellow-600"></i>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-gray-600">Año Promedio</p>
-                            <p class="text-xl font-semibold text-gray-900">${stats.añoPromedio || 0}</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-purple-50 p-4 rounded-lg">
-                    <div class="flex items-center">
-                        <div class="p-2 bg-purple-100 rounded-full">
-                            <i class="fas fa-road text-purple-600"></i>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-gray-600">KM Promedio</p>
-                            <p class="text-xl font-semibold text-gray-900">${Math.round(stats.kilometrajePromedio || 0).toLocaleString()}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
+            document.getElementById('statTotalVehiculos').textContent = stats.total || 0;
+            document.getElementById('statVehiculosActivos').textContent = stats.porEstado?.activo || 0;
+            document.getElementById('statAnoPromedio').textContent = stats.añoPromedio || 0;
+            document.getElementById('statKmPromedio').textContent = (stats.kilometrajePromedio || 0).toLocaleString();
         }
 
         // Toggle edit mode
@@ -396,7 +521,7 @@
             if (show) {
                 editForm.classList.remove('hidden');
                 statsSection.classList.add('hidden');
-                editBtn.textContent = 'Cancelar Edición';
+                editBtn.innerHTML = '<i class="fas fa-times mr-2"></i>Cancelar Edición';
                 editBtn.className = 'bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition duration-200';
             } else {
                 editForm.classList.add('hidden');
@@ -422,22 +547,20 @@
                     body: JSON.stringify(data)
                 });
                 
-                const result = await response.json();
-                
                 if (response.ok) {
+                    const result = await response.json();
                     showAlert('Perfil actualizado correctamente', 'success');
                     displayProfile(result.usuario);
                     toggleEditMode(false);
                     
                     // Update localStorage
-                    const updatedUser = JSON.parse(localStorage.getItem('usuario'));
-                    updatedUser.nombre = result.usuario.nombre;
-                    updatedUser.telefono = result.usuario.telefono;
-                    updatedUser.direccion = result.usuario.direccion;
+                    const updatedUser = { ...currentUser, ...result.usuario };
                     localStorage.setItem('usuario', JSON.stringify(updatedUser));
+                    currentUser = updatedUser;
                     
                     document.getElementById('userName').textContent = `Hola, ${result.usuario.nombre}`;
                 } else {
+                    const result = await response.json();
                     showAlert(result.error || 'Error al actualizar perfil');
                 }
             } catch (error) {
@@ -450,10 +573,19 @@
             }
         }
 
-        // Event listeners
-        document.getElementById('logoutBtn').addEventListener('click', () => {
+        // Logout function
+        function performLogout() {
             localStorage.clear();
             window.location.href = 'login.html';
+        }
+
+        // Event listeners
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            showConfirmModal(
+                'Cerrar Sesión',
+                '¿Estás seguro de que deseas cerrar sesión?',
+                performLogout
+            );
         });
 
         document.getElementById('editBtn').addEventListener('click', () => {
@@ -525,10 +657,10 @@
         });
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             checkAuth();
-            loadProfile();
-            loadStats();
+            await loadProfile();
+            await loadVehiclesForStats();
         });
     </script>
 </body>
